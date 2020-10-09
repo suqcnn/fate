@@ -13,6 +13,7 @@ import (
 
 // Information ...
 type Information interface {
+	Group(b bool)
 	Write(names ...Name) error
 	Head(heads ...string) error
 	Finish() error
@@ -24,16 +25,31 @@ type jsonInformation struct {
 	file *os.File
 }
 
+// Group ...
+func (j *jsonInformation) Group(b bool) {
+	panic("implement me")
+}
+
 type logInformation struct {
 	path  string
 	sugar *zap.SugaredLogger
 	head  []string
 }
 
+// Group ...
+func (l *logInformation) Group(b bool) {
+	panic("implement me")
+}
+
 type csvInformation struct {
 	head []string
 	path string
 	file *os.File
+}
+
+// Group ...
+func (c *csvInformation) Group(b bool) {
+	panic("implement me")
 }
 
 // Finish ...
@@ -104,6 +120,9 @@ func (l *logInformation) Head(heads ...string) error {
 	return nil
 }
 func logOutput(path string) Information {
+	if path == "" {
+		path = "stdout"
+	}
 	cfg := zap.NewProductionConfig()
 
 	cfg.EncoderConfig = zapcore.EncoderConfig{
